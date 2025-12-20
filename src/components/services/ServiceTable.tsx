@@ -8,36 +8,23 @@ import { ServiceRow } from './ServiceRow';
 import { Pagination } from './Pagination';
 import { useRouter } from 'next/navigation';
 
-const ITEMS_PER_PAGE = 10;
 
 export const ServiceTable: React.FC = () => {
-  const { services, loading, error, filterServices } = useServices();
-  const [activeTab, setActiveTab] = useState<TabType>('All');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedServices, setSelectedServices] = useState<Set<number>>(new Set());
-   const router=useRouter()
-  const filteredServices = useMemo(() => {
-    return filterServices(services, activeTab, searchTerm);
-  }, [services, activeTab, searchTerm, filterServices]);
-
   const {
-    currentPage,
-    startIndex,
-    endIndex,
-    hasNextPage,
-    hasPrevPage,
-    totalPages,
-    goToPage,
-    nextPage,
-    prevPage
-  } = usePagination({
-    totalItems: filteredServices.length,
-    itemsPerPage: ITEMS_PER_PAGE
-  });
+    services,
+    loading,
+    error,
+    pagination,
+    setPagination,
+    setActiveTab,
+    setSearchTerm,
+    activeTab,
+    searchTerm,
+  } = useServices();
+  const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
+  const router = useRouter();
 
-  const paginatedServices = filteredServices.slice(startIndex, endIndex);
-
-  const handleSelectService = (id: number) => {
+  const handleSelectService = (id: string) => {
     const newSelected = new Set(selectedServices);
     if (newSelected.has(id)) {
       newSelected.delete(id);
@@ -48,28 +35,50 @@ export const ServiceTable: React.FC = () => {
   };
 
   const handleSelectAll = () => {
-    if (selectedServices.size === paginatedServices.length) {
+    if (selectedServices.size === services.length) {
       setSelectedServices(new Set());
     } else {
-      setSelectedServices(new Set(paginatedServices.map(s => s.id)));
+      setSelectedServices(new Set(services.map(s => s.id)));
     }
   };
 
-  const handleEdit = (id: number) => {
-    console.log('Edit service:', id);
+  const handleEdit = (id: string) => {
     // TODO: Implement edit functionality
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     console.log('Delete service:', id);
     // TODO: Implement delete functionality
   };
 
   const handleCreate = () => {
-    //console.log('Create new service');
-    // TODO: Implement create functionality
+    router.push('specialists/create');
+  };
 
-    router.push('specialists/create')
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    setPagination((prev: any) => ({ ...prev, page: 1 }));
+  };
+
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    setPagination((prev: any) => ({ ...prev, page: 1 }));
+  };
+
+  const handlePageChange = (page: number) => {
+    setPagination((prev: any) => ({ ...prev, page }));
+  };
+
+  const handleNextPage = () => {
+    if (pagination.page < pagination.totalPages) {
+      setPagination((prev: any) => ({ ...prev, page: prev.page + 1 }));
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (pagination.page > 1) {
+      setPagination((prev: any) => ({ ...prev, page: prev.page - 1 }));
+    }
   };
 
   if (loading) {
@@ -103,9 +112,9 @@ export const ServiceTable: React.FC = () => {
     <div className="bg-white rounded-lg shadow">
       <ServiceFilters
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
+        onSearchChange={handleSearchChange}
         onCreateClick={handleCreate}
       />
 
@@ -116,7 +125,7 @@ export const ServiceTable: React.FC = () => {
               <th className="px-6 py-3 text-left">
                 <input
                   type="checkbox"
-                  checked={selectedServices.size === paginatedServices.length && paginatedServices.length > 0}
+                  checked={selectedServices.size === services.length && services.length > 0}
                   onChange={handleSelectAll}
                   className="rounded border-gray-300"
                   aria-label="Select all services"
@@ -146,14 +155,14 @@ export const ServiceTable: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedServices.length === 0 ? (
+            {services.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
                   No services found
                 </td>
               </tr>
             ) : (
-              paginatedServices.map((service) => (
+              services.map((service) => (
                 <ServiceRow
                   key={service.id}
                   service={service}
@@ -169,13 +178,13 @@ export const ServiceTable: React.FC = () => {
       </div>
 
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        hasNextPage={hasNextPage}
-        hasPrevPage={hasPrevPage}
-        onPageChange={goToPage}
-        onNextPage={nextPage}
-        onPrevPage={prevPage}
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        hasNextPage={pagination.page < pagination.totalPages}
+        hasPrevPage={pagination.page > 1}
+        onPageChange={handlePageChange}
+        onNextPage={handleNextPage}
+        onPrevPage={handlePrevPage}
       />
     </div>
   );
