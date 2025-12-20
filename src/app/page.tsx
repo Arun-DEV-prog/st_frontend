@@ -1,12 +1,11 @@
 import Image from "next/image";
 import ResponsiveLayout from '@/components/ResponsiveLayout';
+import { ServiceTable } from '@/components/services/ServiceTable';
 
 export default function Home() {
   return (
-       <div>
-       <ResponsiveLayout>
-            
-       </ResponsiveLayout>
-       </div>
+    <ResponsiveLayout>
+      <ServiceTable />
+    </ResponsiveLayout>
   );
 }

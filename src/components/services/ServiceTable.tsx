@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useMemo } from 'react';
 import { Service, TabType } from '../../types/service';
 import { useServices } from '../../hooks/useServices';
@@ -5,6 +6,7 @@ import { usePagination } from '../../hooks/usePagination';
 import { ServiceFilters } from './ServiceFilters';
 import { ServiceRow } from './ServiceRow';
 import { Pagination } from './Pagination';
+import { useRouter } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -13,7 +15,7 @@ export const ServiceTable: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedServices, setSelectedServices] = useState<Set<number>>(new Set());
-
+   const router=useRouter()
   const filteredServices = useMemo(() => {
     return filterServices(services, activeTab, searchTerm);
   }, [services, activeTab, searchTerm, filterServices]);
@@ -64,8 +66,10 @@ export const ServiceTable: React.FC = () => {
   };
 
   const handleCreate = () => {
-    console.log('Create new service');
+    //console.log('Create new service');
     // TODO: Implement create functionality
+
+    router.push('specialists/create')
   };
 
   if (loading) {
@@ -119,13 +123,13 @@ export const ServiceTable: React.FC = () => {
                 />
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Service
+                Specialist
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price
+                Consultation Fee
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Purchases
+                Appointments
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Duration

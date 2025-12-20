@@ -2,9 +2,12 @@
 import React, { useState } from 'react';
 import { Sidebar } from './layout/Sidebar';
 import { Header } from './layout/Header';
-import { ServiceTable } from './services/ServiceTable';
 
-export default function ResponsiveLayout() {
+interface ResponsiveLayoutProps {
+  children?: React.ReactNode;
+}
+
+export default function ResponsiveLayout({ children }: ResponsiveLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
@@ -18,7 +21,7 @@ export default function ResponsiveLayout() {
         />
 
         <main className="flex-1 overflow-y-auto p-6">
-          <ServiceTable />
+          {children}
         </main>
       </div>
     </div>

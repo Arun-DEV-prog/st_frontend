@@ -47,14 +47,14 @@ export const ServiceFilters: React.FC<ServiceFiltersProps> = ({
       <div className="px-6 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <Input
           type="text"
-          placeholder="Search Service"
+          placeholder="Search Specialists"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
           className="w-full sm:w-64"
         />
         <div className="flex gap-2">
           <Button onClick={onCreateClick}>
-            + Create
+            Create Specialists
           </Button>
           <Button variant="outline">
             Action
