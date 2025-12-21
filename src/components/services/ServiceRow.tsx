@@ -7,9 +7,9 @@ import { Button } from '../ui/Button';
 interface ServiceRowProps {
   service: Service;
   isSelected: boolean;
-  onSelect: (id: number) => void;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onSelect: (id: string) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export const ServiceRow: React.FC<ServiceRowProps> = ({

@@ -22,8 +22,18 @@ export const api = {
     throw new Error('Not implemented');
   },
 
-  deleteService: async (id: number) => {
-    // return fetch(`/api/services/${id}`, { method: 'DELETE' });
-    throw new Error('Not implemented');
+  deleteService: async (id: string) => {
+    // Call backend API to delete specialist
+    const res = await fetch(`http://localhost:5000/api/specialists/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error('Failed to delete specialist');
+    // Some backends return no content for DELETE (204), so check before parsing JSON
+    if (res.status === 204) return true;
+    try {
+      return await res.json();
+    } catch {
+      return true;
+    }
   }
 };
