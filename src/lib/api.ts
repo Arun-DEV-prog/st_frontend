@@ -1,3 +1,4 @@
+import { Service } from '../types/service';
 // API utilities for service management
 export const api = {
   // Accept params for pagination, tab, search
@@ -12,18 +13,18 @@ export const api = {
     return fetch(`http://localhost:5000/api/specialists?${params.toString()}`).then(res => res.json());
   },
 
-  createService: async (service: any) => {
+  createService: async (Service: any) => {
     // return fetch('/api/services', { method: 'POST', body: JSON.stringify(service) });
     throw new Error('Not implemented');
   },
 
   updateService: async (id: number, service: any) => {
-    // return fetch(`/api/services/${id}`, { method: 'PUT', body: JSON.stringify(service) });
+     return fetch(`http://localhost:5000/api/specialists/${id}`, { method: 'PUT', body: JSON.stringify(service) });
     throw new Error('Not implemented');
   },
 
   deleteService: async (id: number) => {
-    // return fetch(`/api/services/${id}`, { method: 'DELETE' });
+     return fetch(`http://localhost:5000/api/specialists/${id}`, { method: 'DELETE' });
     throw new Error('Not implemented');
   }
 };
